@@ -16,7 +16,6 @@ const authentication = async (req,res,next)=>{
       }
       // Store the decoded user data in the request object
       req.user = decoded;
-      console.log("bsdk",req.user)
       console.log("req12",decoded)
       next();
     })
