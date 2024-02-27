@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   ScrollView,
@@ -8,9 +8,9 @@ import {
   StyleSheet,
   Alert
 } from 'react-native';
-import {Channel, YoutubeApi} from '../../services';
+import { Channel, YoutubeApi } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const ParentChannelListScreen = () => {
@@ -37,7 +37,7 @@ const ParentChannelListScreen = () => {
   const handleChannelCardClick = async channelId => {
     try {
       const result = await YoutubeApi.getVideosByChannelId(channelId);
-      navigation.navigate('Channel Videos', {videos: result.items || []});
+      navigation.navigate('Channel Videos', { videos: result.items || [] });
     } catch (error) {
       console.error(error);
     }
@@ -45,21 +45,21 @@ const ParentChannelListScreen = () => {
 
   const handleDeleteChannel = async (channelId) => {
     try {
-        const token = await AsyncStorage.getItem('token');
-       await Channel.deleteChannel(token, channelId._id);
-        // Remove the deleted channel from the local channelList state
-        setChannelList(channelList.filter(channel => channel.channelId !== channelId));
-        Alert.alert('Playlist Deleted!',`${channelId.channelName} deleted from your List Successfully`)
-        await getChannelList();
+      const token = await AsyncStorage.getItem('token');
+      await Channel.deleteChannel(token, channelId._id);
+      // Remove the deleted channel from the local channelList state
+      setChannelList(channelList.filter(channel => channel.channelId !== channelId));
+      Alert.alert('Playlist Deleted!', `${channelId.channelName} deleted from your List Successfully`);
+      await getChannelList();
     } catch (err) {
-        Alert.alert("Error!","Error while deleting")
-        console.error(err, 'error');
+      Alert.alert("Error!", "Error while deleting");
+      console.error(err, 'error');
     }
-};
+  };
 
   return (
     <View style={styles.container}>
-      <ScrollView style={[styles.scrollView, {paddingRight: 10}]}>
+      <ScrollView style={[styles.scrollView, { paddingRight: 10 }]}>
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
@@ -68,16 +68,17 @@ const ParentChannelListScreen = () => {
               key={index}
               style={styles.touchable}
               onPress={() => handleChannelCardClick(item.channelId)}>
-              <View style={[styles.card, {backgroundColor: '#3498db'}]}>
-                <Text style={[styles.cardText, {color: 'white'}]}>
+              <View style={[styles.card, { backgroundColor: '#3498db' }]}>
+                <Text style={[styles.cardText, { color: 'white' }]}>
                   {item.channelName}
                 </Text>
-                <Text style={{color: 'white'}}>ID: {item.channelId}</Text>
-                <AntDesign
-                  name="delete"
-                  style={{color: 'white', fontSize: 24, marginTop: 15}}
-                  onPress={() => handleDeleteChannel(item)}
-                />
+                <Text style={{ color: 'white' }}>ID: {item.channelId}</Text>
+                <TouchableOpacity onPress={() => handleDeleteChannel(item)} style={{ position: 'absolute', right: 10, top: 10 }}>
+                  <AntDesign
+                    name="delete"
+                    style={{ color: 'white', fontSize: 24 }}
+                  />
+                </TouchableOpacity>
               </View>
             </TouchableOpacity>
           ))
@@ -107,6 +108,7 @@ const styles = StyleSheet.create({
     marginBottom: 10, // Add margin bottom here
     height: 100,
     borderRadius: 10,
+    position: 'relative',
   },
   cardText: {
     fontWeight: 'bold',

@@ -45,8 +45,8 @@ function ChannelVideos({ route, id }) {
 console.log("object",channelYtId)
         console.log("videos[0]?.snippet?.channelTitle",videos[0]?.snippet?.channelTitle)
         const data = {
-            channelName: videos[0]?.snippet?.channelTitle,
-            channelId: channelYtId
+            channelName: "videos[0]?.snippet?.channelTitle",
+            channelId: "channelYtId"
             // channelId: "afafafss"
 
         };

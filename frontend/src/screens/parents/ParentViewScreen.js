@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, Text, View, ScrollView, Alert, TouchableWithoutFeedback } from 'react-native';
 import { Video } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import YoutubePlayer from 'react-native-youtube-iframe';
+import { Card, Title } from 'react-native-paper';
 
 const ParentViewScreen = ({ route }) => {
   const clickedPlaylistId = route.params.id;
-  const navigation = useNavigation();
   const [videos, setVideos] = useState([]);
+  const playerRef = useRef(null);
 
   useEffect(() => {
     fetchPlaylistData();
@@ -25,48 +25,37 @@ const ParentViewScreen = ({ route }) => {
     }
   };
 
-  // const handleView = (item) => {
-  //   // Handle view action (navigate to view screen or show details)
-  //   console.log('View:', item);
-  // };
-
-  const handleDelete = async (item) => {
-    const token = await AsyncStorage.getItem('token');
-    try {
-      // Perform the deletion logic using the API or service method
-      // Example: await Video.deleteVideo(token, item._id);
-      await Video.deleteVideo(token,item._id,clickedPlaylistId)
-      Alert.alert('Video delete SuccessFully from the playlist');
-
-      // After deletion, refresh the playlist data
-      fetchPlaylistData();
-    } catch (error) {
-      console.error('Error deleting playlist item:', error);
-      Alert.alert('Error', 'Failed to delete playlist item');
+  const handleCardPress = (videoId) => {
+    if (videos === videoId) {
+      playerRef.current && typeof playerRef.current.pause === 'function' && playerRef.current.pause();
+    } else {
+      playerRef.current && typeof playerRef.current.pause === 'function' && playerRef.current.pause();
+      if (playerRef.current && typeof playerRef.current.play === 'function' && !playerRef.current.isPlaying()) {
+        setVideos(videoId);
+      }
     }
   };
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={videos}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.videoName}>{item.videoName}</Text>
-            <YoutubePlayer
-              height={200}
-              videoId={getYouTubeVideoId(item.videoUrl)}
-            />
-            {/* <TouchableOpacity style={styles.viewButton} onPress={() => handleView(item)}>
-              <Text style={styles.buttonText}>View</Text>
-            </TouchableOpacity> */}
-            <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(item)}>
-              <Text style={styles.buttonText}>Delete</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        keyExtractor={(item) => item._id}
-      />
+      <ScrollView>
+        {videos.map((item) => (
+          <TouchableWithoutFeedback key={item._id} onPress={() => handleCardPress(item._id)}>
+            <View>
+              <Card style={styles.card}>
+                <YoutubePlayer
+                  ref={playerRef}
+                  height={200}
+                  videoId={getYouTubeVideoId(item.videoUrl)}
+                />
+                <View style={styles.videoInfoContainer}>
+                  <Text style={styles.videoName}>{item.videoName}</Text>
+                </View>
+              </Card>
+            </View>
+          </TouchableWithoutFeedback>
+        ))}
+      </ScrollView>
     </View>
   );
 };
@@ -89,27 +78,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
   },
+  videoInfoContainer: {
+    padding: 8,
+  },
   videoName: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
-  },
-  viewButton: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 5,
-  },
-  deleteButton: {
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 5,
-  },
-  buttonText: {
-    fontSize:21,
-    color: 'red',
-    textAlign: 'center',
   },
 });
 
