@@ -2,60 +2,26 @@ const playlist = require("../../model/playlist/playlist");
 const mongoose = require('mongoose')
 const UserType= require("../../model/user/userModel")
 module.exports = {
-  video: async (req, res) => {
-    console.log(req.user.paylod, "auth req user");
+  video : async (req, res) => {
     try {
-      const role = req.user.paylod.role;
-      if (role == "user") {
-        return res.status(401).send({ status: 401, message: "Not Authorized" });
-      }
-      const { videoName, videoDescription, videoUrl, playListId } = req.body;
-      const playListById = await playlist.findById({ _id: playListId });
-      console.log("www",playListById)
-      if (!playListById) {
-        return res
-          .status(404)
-          .send({ status: 404, message: "PlayList with Id not found" });
-      }
-      // const payload = {  videoName, videoDescription, videoUrl, playListId, userId:req.user.paylod._id };
-      playListById.video.push({
-        videoName: videoName,
-        videoDescription: videoDescription,
-        videoUrl: videoUrl,
-      });
-      const videoData = await playListById.save();
-      // const userData=await playlist.findByIdAndUpdate({_id:playListId},
-      //     {
-      //         $push:{
-      //         video:{
-      //             videoName: videoName,
-      //             videoDescription: videoDescription,
-      //             videoUrl: videoUrl,
-      //         }
-      //     }},{new:true})
-      // { $push: { 'playList.$[playlist].video': { $each: videoData.video } } }
-      // { $set: { 'playList.$[playlist].video': [videoData.video] } }, 
-      console.log("uuu",videoData)
-      // await UserType.updateOne(
-      //   { _id: new mongoose.Types.ObjectId(req.user.paylod._id),'playList.playListId': new mongoose.Types.ObjectId(req.user.paylod._id) },
-      //   { $push: { 'playList.$[playlist].video': { $each: videoData.video } } },
-      //   { arrayFilters: [{ 'playlist.userId': new mongoose.Types.ObjectId(req.user.paylod._id) }] } 
-      // )
-    
-
-      res
-        .status(200)
-        .send({
-          status: 200,
-          message: "Video details has been added successfully",
-          data: videoData,
-          check:array.playList
+        const { videoName, videoDescription, videoUrl, playListId } = req.body;
+        const playlist1 = await playlist.findById(playListId);
+        if (!playlist1) {
+            return res.status(404).json({ message: "Playlist not found" });
+        }
+        playlist1.video.push({
+            videoName,
+            videoDescription,
+            videoUrl
         });
+        await playlist1.save();
+        // await UserType.updateMany({ playList: playListId }, { $set: { 'playList.$': playlist1 } });
+        res.status(200).json({ message: "Video added to playlist successfully" });
     } catch (error) {
-      console.log("err", error);
-      return res.status(400).send({ status: 400, message: error.message });
+        console.error(error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
-  },
+},
   getVideo: async (req, res, next) => {
     try {
       const playListId = req.params.playListId;
@@ -93,12 +59,12 @@ module.exports = {
         { _id: paylistId },
         { $inc: { "video.$[].sNo": -1 } }
       );
-      const playlistData = await playlist.findById({ _id: paylistId });
-      await UserType.updateOne(
-        { _id: new mongoose.Types.ObjectId(req.user.paylod._id) },
-        { $push: { 'playList.$[playlist].video': playlistData.video } }, 
-        { arrayFilters: [{ 'playlist.userId': new mongoose.Types.ObjectId(req.user.paylod._id) }] } 
-      )    
+      // const playlistData = await playlist.findById({ _id: paylistId });
+      // await UserType.updateOne(
+      //   { _id: new mongoose.Types.ObjectId(req.user.paylod._id) },
+      //   { $push: { 'playList.$[playlist].video': playlistData.video } }, 
+      //   { arrayFilters: [{ 'playlist.userId': new mongoose.Types.ObjectId(req.user.paylod._id) }] } 
+      // )    
       console.log("ppp",playlist)
       res
         .status(204)

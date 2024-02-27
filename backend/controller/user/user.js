@@ -127,15 +127,19 @@ exports.login= async(req,res)=>{
         // res.status(500).json({ message: 'Internal server error' });
     }
 }
-// exports.getAllUser=async(req,res)=>{
-//     try{
-//         let user= await User.find()
-//         res.status(200).json(user)
-//     }catch(error){
-//         console.error(err.message);
-//         res.status(500).send("Server error");
-//     }
-// }
+exports.getAllUser=async(req,res)=>{
+    try{
+        const parentId=req.user.paylod._id
+        let user= await User.find({ _id:parentId }).populate('playList')
+        if(!user){
+            return res.sendStatus(404).send({status:404,message:"User not found"})
+        }
+        res.status(200).json({status:200,message:"",data:user})
+    }catch(error){
+        console.error(error.message);
+        res.status(500).send("Server error");
+    }
+}
 exports.getcustomerList=async(req,res)=>{
     try{
         const role=req.user.paylod.role
