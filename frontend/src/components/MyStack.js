@@ -14,6 +14,7 @@ import ParentCreatePlaylistScreen from "../screens/parents/ParentCreatePlaylistS
 import ParentSignUpScreen from "../screens/parents/ParentSignUpScreen";
 import ParentChannelScreen from '../screens/parents/ParentChannelScreen';
 import ParentChannelListScreen from '../screens/parents/ParentChannelListScreen';
+import ParentChannelVideoScreen from '../screens/parents/ParentChannelVideoScreen'
  
 const Stack = createNativeStackNavigator();
  
@@ -34,6 +35,7 @@ const MyStack = ({ onLogout }) => {
       {/* <Stack.Screen name="Update" component={ParentUpdateScreen} /> */}
       <Stack.Screen name="Channel" component={ParentChannelScreen}/>
       <Stack.Screen name="Channel List" component={ParentChannelListScreen}/> 
+      <Stack.Screen name="Channel Videos" component={ParentChannelVideoScreen}/> 
     <Stack.Screen name="Playlist" component={ParentPlaylistScreen}/> 
     <Stack.Screen name="Login" component={LoginScreen} />
     <Stack.Screen  name="Sign UP" component={ParentSignUpScreen}/>

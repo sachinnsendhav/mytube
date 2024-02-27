@@ -9,7 +9,7 @@ import {
   Text,
   Alert,
 } from "react-native";
-import { RadioButton } from "react-native-paper";
+// import { RadioButton } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Auth } from "../services";
 import { useNavigation } from "@react-navigation/native";
@@ -18,70 +18,10 @@ const LoginScreen = ({ onLoginSuccess,setIsLogInScreen }) => {
   const navigation = useNavigation();
   const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user");
-  const [checked, setChecked] = useState("user");
+  // const [role, setRole] = useState("user");
+  // const [checked, setChecked] = useState("user");
   
-  const handleLogin = async () => {
-    try {
-      const data = {
-        userName: userName,
-        password: password,
-      };
-      
-      let response;
-      if (role === "user") {
-        response = await Auth.userLogin(data);
-        console.log("responsesss",response)
-      } else if (role === "admin") {
-        const adminData = {
-          email: userName,
-          password: password,
-        };
-        response = await Auth.login(adminData);
-      }
-      
-      if (response && response.data) {
-        const userObjectId = response.data.userData._id;
-        const userFirstName = response.data.userData.firstName;
-        const userLastName = response.data.userData.lastName;
-        const userUserName = response.data.userData.userName;
-        const userGender = response.data.userData.gender;
-        const userAvatar = response.data.userData.avatar;
-        const userPlayListId = response.data.userData.playList;
-        const userParentFirstName = response.data.userData.parentfirstName;
-        const userParentLastName = response.data.userData.parentLastName;
-        const userRole = response.data.userData.role;
-        
-        await AsyncStorage.setItem("userObjectId", userObjectId);
-        await AsyncStorage.setItem("userFirstName", userFirstName);
-        await AsyncStorage.setItem("userLastName", userLastName);
-        await AsyncStorage.setItem("userUserName", userUserName);
-        await AsyncStorage.setItem("userGender", userGender);
-        await AsyncStorage.setItem("userAvatar", userAvatar);
-        await AsyncStorage.setItem("userParentFirstName", userParentFirstName);
-        await AsyncStorage.setItem("userParentLastName", userParentLastName);
-        await AsyncStorage.setItem("role", userRole);
-        await AsyncStorage.setItem(
-          "userPlayListId",
-          JSON.stringify(userPlayListId)
-        );
 
-        const tokenGet = response.data.token;
-        await AsyncStorage.setItem("token", tokenGet);
-        if (response.status === 200) {
-          onLoginSuccess();
-          Alert.alert("Login Successful", "You have successfully logged in.");
-        } else {
-          Alert.alert("Login Failed", "Invalid credentials. Please try again.");
-        }
-      } else {
-        Alert.alert("Login Failed", "Invalid credentials. Please try again.");
-      }
-    } catch (error) {
-      console.log(error);
-      Alert.alert("Error", "An error occurred while logging in");
-    }
-  };
 
   const handleSignup = async () => {
     // Alert.alert("Sign Up", "Signup functionality needs to be implemented.");
@@ -145,20 +85,15 @@ const LoginScreen = ({ onLoginSuccess,setIsLogInScreen }) => {
         style={styles.backgroundImage}
       >
         <View style={styles.logoContainer}>
-          {role === "admin" ? (
+
             <Image
               source={require('../assets/my-yt.png')}
               style={styles.logo}
             />
-          ) : (
-            <Image
-              source={require('../assets/my-yt.png')}
-              style={styles.logo}
-            />
-          )}
+
         </View>
         <View style={styles.formContainer}>
-          <View style={styles.radioButtonContainer}>
+          {/* <View style={styles.radioButtonContainer}>
             <RadioButton
               value="user"
               status={checked === "user" ? "checked" : "unchecked"}
@@ -182,11 +117,11 @@ const LoginScreen = ({ onLoginSuccess,setIsLogInScreen }) => {
             />
 
             <Text style={styles.radioButtonText}>Admin</Text>
-          </View>
+          </View> */}
 
           <View style={styles.card}>
             <TextInput
-              placeholder="Username"
+              placeholder="Email"
               style={styles.input}
               value={userName}
               onChangeText={setUsername}
@@ -203,7 +138,7 @@ const LoginScreen = ({ onLoginSuccess,setIsLogInScreen }) => {
           </View>
           <TouchableOpacity
             style={styles.loginButton}
-            onPress={role === "user" ? handleLogin : parentLogin}
+            onPress={parentLogin}
           >
             <Text style={styles.loginButtonText}>Log In</Text>
           </TouchableOpacity>
