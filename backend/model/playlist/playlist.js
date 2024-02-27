@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const User=require('../user/userModel')
 const playlistShema = new mongoose.Schema({
     name:{
         type : String,
@@ -43,5 +43,15 @@ playlistShema.pre("save", function (next) {
     
     next(); // Continue with the save operation
   });
+
+  playlistShema.pre('deleteOne', async function(next) {
+    try {
+        console.log("remove",this.getQuery()._id)
+        await User.updateMany({ playList: this.getQuery()._id }, { $pull: { playList: this.getQuery()._id } });
+        next();
+    } catch (error) {
+        next(error);
+    }
+});  
 const Playlist = mongoose.model('Playlist',playlistShema);
 module.exports = Playlist;

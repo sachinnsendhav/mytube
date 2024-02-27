@@ -33,7 +33,11 @@ exports.addPlaylist = async(req,res) => {
         }
         console.log("ww",playlistData)
         const userDetails=await UserType.findById({_id:userId})
-         await UserType.updateOne({_id:userId},{ $push: { playList: playlistData } })
+        //  await UserType.updateOne({_id:userId},{ $push: { playList: playlistData } })
+        await UserType.updateOne(
+            { _id: userId },
+            { $push: { playList: categorySave._id } }
+        );
         res.status(200).send({ status:200,message:"Playlist Added Successfully", data:responseData });
     }
     catch(error){
@@ -46,7 +50,7 @@ exports.removePlaylist = async(req,res) => {
     try{
         const paylistId = req.params.paylistId;
         const userId = req.user.paylod._id;
-        const paylistExist=await Category.findById({_id:paylistId})
+        const paylistExist=await Category.findOne({$and:[{_id:paylistId},{userId:userId}]})
         if (!paylistExist) {
             return res.status(404).send({
                 status: "404",
