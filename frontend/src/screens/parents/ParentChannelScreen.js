@@ -35,18 +35,18 @@ function ChannelVideos({ route, id }) {
         }
     };
 
-    const loadMoreVideos = () => {
-        // Load more videos with the next page token
-        getVideosByChannelId(route.params.channelId, pageToken);
-    };
+    // const loadMoreVideos = () => {
+    //     // Load more videos with the next page token
+    //     getVideosByChannelId(route.params.channelId, pageToken);
+    // };
 
     const addChannel = async () => {
         const channelYtId = route.params.channelId;
 console.log("object",channelYtId)
         console.log("videos[0]?.snippet?.channelTitle",videos[0]?.snippet?.channelTitle)
         const data = {
-            channelName: "videos[0]?.snippet?.channelTitle",
-            channelId: "channelYtId"
+            channelName: videos[0]?.snippet?.channelTitle,
+            channelId: channelYtId
             // channelId: "afafafss"
 
         };
@@ -57,7 +57,7 @@ console.log("object",channelYtId)
             console.log("result addChannel......",result) // Assuming addChannel function doesn't need token in React Native
             if (result?.status === "200" || result?.status === 201) {
                 Alert.alert("Channel added!",`${data.channelName} is added in your Channel List`);
-                navigation.navigate('Channel List', channelYtId);
+                // navigation.navigate('Channel List', channelYtId);
             }
         } catch (error) {
           console.log(error.response.data.mesage,"error,,,,,,,,,,")
@@ -119,11 +119,11 @@ console.log("object",channelYtId)
                   ))}
               </View>
           </ScrollView>
-          {videos.length > limit && (
+          {/* {videos.length > limit && (
               <TouchableOpacity onPress={loadMoreVideos} style={{ backgroundColor: 'white', padding: 10, alignItems: 'center' }}>
                   <Text style={{ color: 'blue' }}>Load More</Text>
               </TouchableOpacity>
-          )}
+          )} */}
       </View>
   );
   

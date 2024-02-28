@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
-  Alert
+  Alert,
+  RefreshControl
 } from 'react-native';
 import { Channel, YoutubeApi } from '../../services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,6 +17,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 const ParentChannelListScreen = () => {
   const [channelList, setChannelList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -23,6 +25,7 @@ const ParentChannelListScreen = () => {
   }, []);
 
   const getChannelList = async () => {
+    setRefreshing(true);
     setLoading(true);
     try {
       const token = await AsyncStorage.getItem('token');
@@ -32,6 +35,7 @@ const ParentChannelListScreen = () => {
       console.error(err, 'error');
     }
     setLoading(false);
+    setRefreshing(false);
   };
 
   const handleChannelCardClick = async channelId => {
@@ -59,28 +63,42 @@ const ParentChannelListScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={[styles.scrollView, { paddingRight: 10 }]}>
+      <ScrollView
+        style={[styles.scrollView, { paddingRight: 10 }]}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={getChannelList}
+            colors={['#3498db']}
+            tintColor={'#3498db'}
+          />
+        }
+      >
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
           channelList.map((item, index) => (
-            <TouchableOpacity
+            <View
               key={index}
               style={styles.touchable}
-              onPress={() => handleChannelCardClick(item.channelId)}>
+              onPress={() => handleChannelCardClick(item.channelId)}
+            >
               <View style={[styles.card, { backgroundColor: '#3498db' }]}>
                 <Text style={[styles.cardText, { color: 'white' }]}>
                   {item.channelName}
                 </Text>
                 <Text style={{ color: 'white' }}>ID: {item.channelId}</Text>
-                <TouchableOpacity onPress={() => handleDeleteChannel(item)} style={{ position: 'absolute', right: 10, top: 10 }}>
+                <TouchableOpacity
+                  onPress={() => handleDeleteChannel(item)}
+                  style={{ position: 'absolute', right: 10, top: 10 }}
+                >
                   <AntDesign
                     name="delete"
                     style={{ color: 'white', fontSize: 24 }}
                   />
                 </TouchableOpacity>
               </View>
-            </TouchableOpacity>
+            </View>
           ))
         )}
       </ScrollView>
