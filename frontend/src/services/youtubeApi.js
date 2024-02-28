@@ -11,6 +11,16 @@ const options = {
         },
     },
 };
+const options2 = {
+    params: {
+        maxResults: 10,
+    },
+    headers: {
+        headers: {
+            "Accept": "application/json"
+        },
+    },
+};
 const getVideosBySearch = (search) =>
     new Promise((resolve, reject) => {
         axios
@@ -47,9 +57,19 @@ const getRelatedVideos = (id) =>
             );
     });
 
+    const getVideosByChannelId2 = (id) =>
+    new Promise((resolve, reject) => {
+        axios
+            .get(`${endpoints.youtubeApi.getVideosByChannelId}${id}`, options2)
+            .then((response) => resolve(response.data))
+            .catch((error) => reject(error)
+            );
+    });
+
 export {
     getVideosBySearch,
     getVideoDetails,
     getRelatedVideos,
-    getVideosByChannelId
+    getVideosByChannelId,
+    getVideosByChannelId2
 }

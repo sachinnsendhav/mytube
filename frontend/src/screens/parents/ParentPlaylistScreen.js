@@ -64,7 +64,7 @@ const ParentPlaylistScreen = () => {
 
   const handleView = (item) => {
     // Handle view action (navigate to view screen or show details)
-  {navigation.navigate("ParentViewScreen",{ id: item._id })};
+  {navigation.navigate("Playlist Video",{ id: item._id })};
     console.log('View:', item);
   };
 
