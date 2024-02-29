@@ -17,6 +17,7 @@ const template = hbs.compile(source);
 app.set('view engine', 'hbs')
 app.set('views', template_path)  //for templates files (hbs)
 const errorHandlerMiddleware = require("../../middleware/errorvalidation")
+const errorHandlerMiddleware = require("../../middleware/errorvalidation")
 
 
 function issueJwt(paylod){
