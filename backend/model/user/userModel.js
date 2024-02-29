@@ -44,10 +44,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    playList:{
-        type : Array,
-        default : []
-    },
+    playList: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Playlist'
+    }],
     channel:[{
         channelName:{
             type:"String"
