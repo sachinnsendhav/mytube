@@ -16,6 +16,7 @@ const source = fs.readFileSync(path.join(template_path, 'otp.hbs'), 'utf8');
 const template = hbs.compile(source);
 app.set('view engine', 'hbs')
 app.set('views', template_path)  //for templates files (hbs)
+const errorHandlerMiddleware = require("../../middleware/errorvalidation")
 
 function issueJwt(paylod){
     // console.log("pauload12345",paylod)
