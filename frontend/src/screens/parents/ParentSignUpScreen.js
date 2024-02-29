@@ -63,7 +63,7 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
       const data = {
         firstName: firstName,
         lastName: lastName,
-        email: email,
+        email: email.trim(),
         userPassword: password,
         phoneNumber: phone,
         otp: Number(otp),

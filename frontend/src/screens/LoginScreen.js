@@ -32,7 +32,7 @@ const LoginScreen = ({ onLoginSuccess,setIsLogInScreen }) => {
   const parentLogin = async () => {
     try {
       const adminData = {
-        email: userName,
+        email: userName.trimEnd(),
         password: password,
       };
       const response = await Auth.login(adminData);
