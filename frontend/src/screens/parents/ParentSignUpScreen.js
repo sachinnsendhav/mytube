@@ -8,6 +8,8 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
+  Modal,
+  ScrollView
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Auth } from "../../services";
@@ -27,15 +29,16 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const validateForm = () => {
     const error = {};
-    if (firstName === "") {
-      error.firstName = "Please enter First Name";
-    }
-    if (lastName === "") {
-      error.lastName = "Please enter Last Name";
-    }
+    // if (firstName === "") {
+    //   error.firstName = "Please enter First Name";
+    // }
+    // if (lastName === "") {
+    //   error.lastName = "Please enter Last Name";
+    // }
     if (email === "") {
       error.email = "Please enter email address";
     }
@@ -93,7 +96,7 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
             onLoginSuccess();
             Alert.alert(
               "Register Successful",
-              "You have successfully registered as a parent."
+              "You have successfully registered."
             );
           } else {
             Alert.alert(
@@ -157,7 +160,7 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
         );
       }
     } else {
-      alert("Please enter Email Address");
+      Alert.alert("Please enter Email Address");
     }
   
     setLoading(false);
@@ -184,7 +187,7 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
         </Text>
 
         <View style={styles.formContainer}>
-          <TextInput
+          {/* <TextInput
             style={styles.input}
             placeholder="First Name"
             value={firstName}
@@ -195,7 +198,7 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
             placeholder="Last Name"
             value={lastName}
             onChangeText={(text) => setLastName(text)}
-          />
+          /> */}
           <TextInput
             style={styles.input}
             placeholder="Email"
@@ -217,7 +220,7 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
           />
           <TextInput
             style={styles.input}
-            placeholder="OTP"
+            placeholder="Email OTP"
             value={otp}
             onChangeText={(text) => setOtp(text)}
           />
@@ -229,10 +232,16 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
             <Text style={styles.loginButtonText}>Send OTP</Text>
           </TouchableOpacity>
 
+          <TouchableOpacity onPress={() => setShowModal(true)} style={{marginLeft:40, marginTop:10 }}>
+    <Text style={{ color: "#007bff" }}>Read Terms and Conditions</Text>
+  </TouchableOpacity>
+
           <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10, marginTop: 10 }}>
   <TouchableOpacity onPress={() => setAgreedToTerms(!agreedToTerms)} style={{ flexDirection: "row", alignItems: "center" }}>
     <Image source={agreedToTerms ? tickImage : untickImage} style={{ width: 24, height: 24, marginRight: 8 }} />
     <Text>I agree to the terms and condition</Text>
+    
+
   </TouchableOpacity>
 </View>
 
@@ -255,6 +264,65 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
           </Text>
         </View>
       </ImageBackground>
+      <Modal
+  visible={showModal}
+  animationType="slide"
+  transparent={true}
+  onRequestClose={() => setShowModal(false)}
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <ScrollView>
+      <Text style={styles.modalText}>
+      MyTube Terms and Conditions{"\n"}
+
+        Welcome to MyTube! By accessing or using our application, website, services, or tools (collectively, "Services"), you agree to comply with and be bound by the following terms and conditions (the "Terms"). Please read these Terms carefully before using our Services.{"\n"}
+
+        1. Acceptance of Terms{"\n"}
+        By creating an account, accessing, or using the Services, you confirm that you have read, understood, and agreed to be bound by these Terms. If you do not agree with any part of these Terms, you must not use our Services.{"\n\n"}
+
+        2. Changes to Terms{"\n"}
+        We reserve the right to modify these Terms at any time. We will notify you of any changes by posting the new Terms on this page. Your continued use of the Services after any such changes take effect constitutes your acceptance of the new Terms.{"\n\n"}
+
+        3. Account Registration{"\n"}
+        To access certain features of the Services, you must register for an account. When registering, you agree to provide accurate, current, and complete information about yourself. You are responsible for safeguarding your account and for all activities that occur under your account.{"\n\n"}
+
+        4. Use of Services{"\n"}
+        You agree to use our Services only for lawful purposes and in accordance with these Terms. You will not use the Services in any way that violates any applicable local, state, national, or international law or regulation.{"\n\n"}
+
+        5. Intellectual Property Rights{"\n"}
+        All rights, title, and interest in and to the Services (excluding content provided by users) are and will remain the exclusive property of MyTube and its licensors. Nothing in the Terms gives you a right to use the MyTube name or any of the MyTube trademarks, logos, domain names, and other distinctive brand features.{"\n\n"}
+
+        6. Content{"\n"}
+        You are responsible for the content that you provide or transmit through our Services. You grant us a non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use any content that you post on or in connection with the Services.{"\n\n"}
+
+        7. Third-Party Services{"\n"}
+        Our Services may contain links to third-party websites or services that are not owned or controlled by MyTube. We have no control over, and assume no responsibility for, the content, privacy policies, or practices of any third-party websites or services.{"\n\n"}
+
+        8. Termination{"\n"}
+        We may terminate or suspend your account and bar access to the Services immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever and without limitation, including but not limited to a breach of the Terms.{"\n\n"}
+
+        9. Limitation of Liability{"\n"}
+        In no event shall MyTube, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Services.{"\n\n"}
+
+        10. Governing Law{"\n"}
+        These Terms shall be governed and construed in accordance with the laws of India, without regard to its conflict of law provisions.{"\n\n"}
+
+        11. Changes to Services{"\n"}
+        We reserve the right to withdraw or amend our Services, and any service or material we provide via the Services, in our sole discretion without notice. We will not be liable if for any reason all or any part of the Services is unavailable at any time or for any period.{"\n\n"}
+
+        12. Contact Us{"\n"}
+        If you have any questions about these Terms, please contact us at contact.timesride@gmail.com{"\n\n"}
+      </Text>
+      </ScrollView>
+      <TouchableOpacity onPress={() => setShowModal(false)} style={styles.okButton}>
+        <Text style={{ color: "#fff" }}>OK</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
+
+
     </View>
   );
 };
@@ -302,6 +370,34 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    width: "80%",
+    maxHeight: "80%",
+  },
+  modalText: {
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign: 'justify',
+    marginBottom: 20,
+  },
+  okButton: {
+    backgroundColor: "#007bff",
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+  },  
 });
 
 export default ParentSignUpScreen;
