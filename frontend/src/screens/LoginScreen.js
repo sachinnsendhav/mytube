@@ -59,7 +59,7 @@ const LoginScreen = ({ onLoginSuccess,setIsLogInScreen }) => {
           onLoginSuccess();
           Alert.alert(
             "Login Successful",
-            "You have successfully logged in admin."
+            "You have successfully logged in."
           );
         } else {
           console.log("response.status", response.status);
