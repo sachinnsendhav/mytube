@@ -96,7 +96,7 @@ const ParentSignUpScreen = ({ onLoginSuccess, setIsLogInScreen }) => {
             onLoginSuccess();
             Alert.alert(
               "Register Successful",
-              "You have successfully registered."
+              "You are registered."
             );
           } else {
             Alert.alert(
