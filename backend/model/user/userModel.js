@@ -4,22 +4,11 @@ const validator = require('validator');
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
-        required: true,
-        validate:{
-            validator: (value) => {
-                return validator.isAlpha(value.replace(/\s/g,''),'en-US', { ignore: ' ' });
-            },
-            message: 'First name must contain only letters',
-        }
+        default: "",
     },
     lastName: {
         type: String,
-        validate: {
-            validator: (value) => {
-                return validator.isAlpha(value.replace(/\s/g, ''), 'en-US', { ignore: ' ' });
-            },
-            message: 'Last name must contain only letters',
-        },
+        default: "",
     },
     email: {
         type: String,
