@@ -11,7 +11,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Channel, YoutubeApi } from '../../services';
 import YouTube from 'react-native-youtube-iframe';
-
+ 
 const VideoChannelAll = () => {
   const [channelList, setChannelList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -19,18 +19,18 @@ const VideoChannelAll = () => {
   const [videos, setVideos] = useState([]);
   const [showVideos, setShowVideos] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
+ 
   useEffect(() => {
     getChannelList();
   }, []);
-
+ 
   useEffect(() => {
     if (showVideos && currentChannelIndex < channelList.length) {
       fetchVideos(channelList[currentChannelIndex].channelId); // Corrected function name
     }
   }, [showVideos, currentChannelIndex]);
-  
-
+ 
+ 
   const getChannelList = async () => {
     setLoading(true);
     try {
@@ -39,10 +39,10 @@ const VideoChannelAll = () => {
       setVideos([]);
       const result = await Channel.getChannelList(token);
       const newChannelList = result?.data;
-      
+     
       // Check if there are any differences in the channel list
       const isDifferent = JSON.stringify(channelList) !== JSON.stringify(newChannelList);
-      
+     
       if (isDifferent) {
         setChannelList(newChannelList);
         setCurrentChannelIndex(0);
@@ -53,8 +53,8 @@ const VideoChannelAll = () => {
     }
     setLoading(false);
   };
-  
-  
+ 
+ 
   const fetchVideos = async (channelId) => {
     try {
       const result = await YoutubeApi.getVideosByChannelId2(channelId);
@@ -65,38 +65,40 @@ const VideoChannelAll = () => {
       console.error(error);
     }
   };
-
-
+ 
+ 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getChannelList().then(() => setRefreshing(false));
   }, []);
-
+ 
   return (
     <View style={styles.container}>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
-      ) : showVideos ? (
+      ) : (
         <ScrollView
           style={[styles.scrollView, { paddingRight: 10 }]}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
-          {videos.map((video, index) => (
-            <YouTube
-              key={index}
-              videoId={video.id.videoId}
-              height={200}
-              style={styles.youtube}
-            />
-          ))}
+          {showVideos ? (
+            videos.map((video, index) => (
+              <YouTube
+                key={index}
+                videoId={video.id.videoId}
+                height={200}
+                style={styles.youtube}
+              />
+            ))
+          ) : (
+            <Text>No videos to show</Text>
+          )}
         </ScrollView>
-      ) : (
-        <Text>No videos to show</Text>
       )}
     </View>
   );
 };
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -113,5 +115,5 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 });
-
+ 
 export default VideoChannelAll;
